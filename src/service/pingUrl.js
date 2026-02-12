@@ -5,17 +5,12 @@ import logger from '../logger/logger.js';
 
 config();
 
-export async function pingUrl() {
-    const logsResponse = []; 
-    urls.forEach(async (url) => {
-        try {
-            const response = await axios.get(url);
-            logsResponse.push(response);
-        } catch (error) {
-            logger.error(error);
-        } finally {
-             logger.info("Quantidade de logs: " + logsResponse.length);
-        }
-    });
-    return logsResponse
+export default async function pingUrl() {
+    try {
+        const response = await axios.get(urls);
+        logger.info(`time request: ${response.config.timeout} ms`);
+        return response.data;
+    } catch (error) {
+        logger.error(error.message);
+    }
 }
