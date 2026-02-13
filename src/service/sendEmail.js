@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const message = (url, service) => {
+const message = (url, service, time, status) => {
 
     return {
         from: process.env.EMAIL_USER,
@@ -63,10 +63,11 @@ const message = (url, service) => {
                 <body>
                     <div class="email-container">
                         <div class="header">
-                            Alerta: ${service} está offline!   
+                            Alerta: ${service} está ${status}!   
                         </div>
                         <div class="body">
-                            <p> Verificar o serviço ${url} que está offline</p>
+                            <p> Verificar o serviço ${url} que está ${status}</p>
+                            <p> Tempo de resposta: ${time} segundos </p>
                         </div>
                     </div>
                 </body>
@@ -75,8 +76,8 @@ const message = (url, service) => {
     }
 };
 
-async function sendEmail(url, service) {
-    await transporter.sendMail(message(url, service), (err, info) => {
+async function sendEmail(url, service, time, status) {
+    await transporter.sendMail(message(url, service, time, status), (err, info) => {
         logger.info(`Enviando email de alerta para: ${message.to}` );
         if (err) {
             logger.error("Erro ao enviar email: " + err.message);
