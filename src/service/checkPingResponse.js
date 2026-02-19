@@ -15,10 +15,7 @@ async function checkPingResponse() {
         if (!response.alive || response.statusHttp === "Offline") {
             await sendEmail(response.url, response.service, null, "offline");
         }
-        else if (response.time > 10) {
-            await sendEmail(response.url, response.service, response.time, "ping lento");
-        }
-        else if (response.timeHttp > 5) { 
+        else if (response.timeHttp > 10) { 
             await sendEmail(response.url, response.service, response.timeHttp, "http lento");
         }
 
