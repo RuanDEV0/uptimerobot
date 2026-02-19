@@ -1,4 +1,3 @@
-import ping from "ping";
 import { config } from "dotenv";
 import urls from "./getIp.js";
 import logger from '../logger/logger.js';
@@ -9,15 +8,9 @@ config();
 export default async function pingUrl() {
     try {
         const data = await checkHttp();
-        const response = await ping.promise.probe(urls.ip);
-
-        response.time = parseFloat((response.time ) / 1000).toFixed(3);
-        response.url = urls.url;
-        response.service = urls.service;
-        response.statusHttp = data.status;
-        response.timeHttp = data.time;
-
-        return response;
+        data.host = urls.url;
+        data.service = urls.service;
+        return data;
     } catch (error) {
         logger.error(error.message);
     }

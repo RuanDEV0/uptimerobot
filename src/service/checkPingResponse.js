@@ -12,17 +12,18 @@ async function checkPingResponse() {
         response = await pingUrl();
         logger.info(`PING ${response.host}`);
     
-        if (!response.alive || response.statusHttp === "Offline") {
+        if (response.status === "Offline") {
             await sendEmail(response.url, response.service, null, "offline");
         }
-        else if (response.timeHttp > 10) { 
+        else if (response.time > 10) { 
             await sendEmail(response.url, response.service, response.timeHttp, "http lento");
         }
 
     } catch (error) {
         logger.error("Error in check ping response: " + error.message);
     } finally {
-        pingHistory.push(`${await getDateTimeLocal()} - Servico: ${response ? response.service : "Unknown"}, TempoIp: ${response ? response.time : "Unknown"}, StatusIp: ${response ? (response.alive ? "Online" : "Offline") : "Error"}, StatusHttp: ${response ? response.statusHttp : "Unknown"}, TempoHttp: ${response ? response.timeHttp : "Unknown"}`);
+
+        pingHistory.push(`${await getDateTimeLocal()} - Servico: ${response ? response.service : "Unknown"}, StatusHttp: ${response ? response.status: "Unknown"}, TempoHttp: ${response ? response.time : "Unknown"}`);
         setTimeout(checkPingResponse, interval);
 
         if (pingHistory.length == 2880) {
